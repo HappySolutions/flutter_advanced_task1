@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> {
                           height: 25,
                         ),
                         Text(
-                          '${snapshots.data?.currentPosition.inSeconds} / ${snapshots.data?.duration.inSeconds}',
+                          '${convertSeconds(snapshots.data!.currentPosition.inSeconds)} / ${convertSeconds(snapshots.data!.duration.inSeconds)}',
                           style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
@@ -117,4 +117,9 @@ class _HomePageState extends State<HomePage> {
           );
         },
       );
+  String convertSeconds(int seconds) {
+    String minutes = (seconds ~/ 60).toString();
+    String secondsStr = (seconds % 60).toString();
+    return '${minutes.padLeft(2, '0')}:${secondsStr.padLeft(2, '0')}';
+  }
 }

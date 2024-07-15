@@ -19,20 +19,23 @@ class _HomePageState extends State<HomePage> {
 
   void initPlayer() async {
     await assetsAudioPlayer.open(
-      Playlist(audios: [
-        Audio(
-          "assets/sampl.mp3",
-          metas: Metas(title: 'First Song'),
-        ),
-        Audio(
-          "assets/sampl1.mp3",
-          metas: Metas(title: 'Second Song'),
-        ),
-        Audio(
-          "assets/sampl2.mp3",
-          metas: Metas(title: 'Third Song'),
-        ),
-      ]),
+      Playlist(
+        audios: [
+          Audio(
+            "assets/sampl.mp3",
+            metas: Metas(title: 'First Song'),
+          ),
+          Audio(
+            "assets/sampl1.mp3",
+            metas: Metas(title: 'Second Song'),
+          ),
+          Audio(
+            "assets/sampl2.mp3",
+            metas: Metas(title: 'Third Song'),
+          ),
+        ],
+      ),
+      autoStart: false,
     );
   }
 
@@ -52,34 +55,41 @@ class _HomePageState extends State<HomePage> {
               color: Colors.blue,
             ),
             child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    assetsAudioPlayer.getCurrentAudioTitle == ''
-                        ? 'Please play your Songs'
-                        : assetsAudioPlayer.getCurrentAudioTitle,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30),
-                  ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  getBtnWidget,
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  const Text(
-                    '00:00 / 02:30',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 17),
-                  ),
-                ],
-              ),
+              child: StreamBuilder(
+                  stream: assetsAudioPlayer.realtimePlayingInfos,
+                  builder: (context, snapshots) {
+                    if (snapshots.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          assetsAudioPlayer.getCurrentAudioTitle == ''
+                              ? 'Please play your Songs'
+                              : assetsAudioPlayer.getCurrentAudioTitle,
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30),
+                        ),
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        getBtnWidget,
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        Text(
+                          '${snapshots.data?.currentPosition.inSeconds} / ${snapshots.data?.duration.inSeconds}',
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 17),
+                        ),
+                      ],
+                    );
+                  }),
             ),
           )
         ]),

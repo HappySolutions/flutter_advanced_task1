@@ -36,6 +36,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       autoStart: false,
+      loopMode: LoopMode.playlist,
     );
   }
 
@@ -111,7 +112,12 @@ class _HomePageState extends State<HomePage> {
                             value: snapshots.data?.currentPosition.inSeconds
                                     .toDouble() ??
                                 0.0,
-                            onChanged: (value) {},
+                            onChanged: (value) async {
+                              await assetsAudioPlayer.seek(
+                                Duration(seconds: value.toInt()),
+                              );
+                              setState(() {});
+                            },
                             min: 0,
                             max:
                                 snapshots.data?.duration.inSeconds.toDouble() ??

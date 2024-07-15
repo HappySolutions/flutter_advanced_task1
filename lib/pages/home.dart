@@ -80,8 +80,20 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(
                           height: 25,
                         ),
+                        Slider(
+                          value: snapshots.data?.currentPosition.inSeconds
+                                  .toDouble() ??
+                              0.0,
+                          onChanged: (value) {},
+                          min: 0,
+                          max: snapshots.data?.duration.inSeconds.toDouble() ??
+                              0.0,
+                        ),
+                        const SizedBox(
+                          height: 25,
+                        ),
                         Text(
-                          '${convertSeconds(snapshots.data!.currentPosition.inSeconds)} / ${convertSeconds(snapshots.data!.duration.inSeconds)}',
+                          '${convertSeconds(snapshots.data?.currentPosition.inSeconds ?? 0)} / ${convertSeconds(snapshots.data?.duration.inSeconds ?? 0)}',
                           style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,

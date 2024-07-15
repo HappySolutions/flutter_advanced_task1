@@ -12,6 +12,31 @@ class _HomePageState extends State<HomePage> {
   final assetsAudioPlayer = AssetsAudioPlayer();
 
   @override
+  void initState() {
+    initPlayer();
+    super.initState();
+  }
+
+  void initPlayer() async {
+    await assetsAudioPlayer.open(
+      Playlist(audios: [
+        Audio(
+          "assets/sampl.mp3",
+          metas: Metas(title: 'First Song'),
+        ),
+        Audio(
+          "assets/sampl1.mp3",
+          metas: Metas(title: 'Second Song'),
+        ),
+        Audio(
+          "assets/sampl2.mp3",
+          metas: Metas(title: 'Third Song'),
+        ),
+      ]),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -30,25 +55,21 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Song Name',
-                    style: TextStyle(
+                  Text(
+                    assetsAudioPlayer.getCurrentAudioTitle == ''
+                        ? 'Please play your Songs'
+                        : assetsAudioPlayer.getCurrentAudioTitle,
+                    style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 40),
+                        fontSize: 30),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 25,
                   ),
-                  FloatingActionButton.large(
-                    onPressed: () {},
-                    shape: const CircleBorder(),
-                    child: const Icon(
-                      Icons.play_arrow,
-                    ),
-                  ),
+                  getBtnWidget,
                   const SizedBox(
-                    height: 10,
+                    height: 25,
                   ),
                   const Text(
                     '00:00 / 02:30',
@@ -65,22 +86,25 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  Widget get getBtnWidget => assetsAudioPlayer.builderIsPlaying(
+        builder: (context, isPlaying) {
+          return FloatingActionButton.large(
+            onPressed: () {
+              if (isPlaying) {
+                assetsAudioPlayer.pause();
+              } else {
+                assetsAudioPlayer.play();
+              }
+              setState(() {});
+            },
+            shape: const CircleBorder(),
+            child: assetsAudioPlayer.builderIsPlaying(
+              builder: (context, isPlaying) {
+                return Icon(isPlaying ? Icons.pause : Icons.play_arrow);
+              },
+            ),
+          );
+        },
+      );
 }
-/*
-IconButton(
-          onPressed: () async {
-            await assetsAudioPlayer.open(
-              Playlist(audios: [
-                Audio("assets/sampl.mp3"),
-                Audio("assets/sampl1.mp3"),
-                Audio("assets/sampl2.mp3"),
-              ]),
-            );
-            setState(() {});
-          },
-          icon:
-              assetsAudioPlayer.builderIsPlaying(builder: (context, isPlaying) {
-            return Icon(isPlaying ? Icons.pause : Icons.play_arrow);
-          }),
-        ),
- */

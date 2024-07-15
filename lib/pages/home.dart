@@ -10,15 +10,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final assetsAudioPlayer = AssetsAudioPlayer();
-  @override
-  void initState() {
-    assetsAudioPlayer.open(
-      Audio("assets/sampl.mp3"),
-      autoStart: true,
-      showNotification: true,
-    );
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +17,70 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Home'),
       ),
-      body: const Center(child: Text('Home')),
+      body: Center(
+        child: Column(children: [
+          Container(
+            height: 400,
+            width: 400,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.blue,
+            ),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Song Name',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 40),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  FloatingActionButton.large(
+                    onPressed: () {},
+                    shape: const CircleBorder(),
+                    child: const Icon(
+                      Icons.play_arrow,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(
+                    '00:00 / 02:30',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 17),
+                  ),
+                ],
+              ),
+            ),
+          )
+        ]),
+      ),
     );
   }
 }
+/*
+IconButton(
+          onPressed: () async {
+            await assetsAudioPlayer.open(
+              Playlist(audios: [
+                Audio("assets/sampl.mp3"),
+                Audio("assets/sampl1.mp3"),
+                Audio("assets/sampl2.mp3"),
+              ]),
+            );
+            setState(() {});
+          },
+          icon:
+              assetsAudioPlayer.builderIsPlaying(builder: (context, isPlaying) {
+            return Icon(isPlaying ? Icons.pause : Icons.play_arrow);
+          }),
+        ),
+ */

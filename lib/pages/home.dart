@@ -61,45 +61,74 @@ class _HomePageState extends State<HomePage> {
                     if (snapshots.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     }
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          assetsAudioPlayer.getCurrentAudioTitle == ''
-                              ? 'Please play your Songs'
-                              : assetsAudioPlayer.getCurrentAudioTitle,
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 30),
-                        ),
-                        const SizedBox(
-                          height: 25,
-                        ),
-                        getBtnWidget,
-                        const SizedBox(
-                          height: 25,
-                        ),
-                        Slider(
-                          value: snapshots.data?.currentPosition.inSeconds
-                                  .toDouble() ??
-                              0.0,
-                          onChanged: (value) {},
-                          min: 0,
-                          max: snapshots.data?.duration.inSeconds.toDouble() ??
-                              0.0,
-                        ),
-                        const SizedBox(
-                          height: 25,
-                        ),
-                        Text(
-                          '${convertSeconds(snapshots.data?.currentPosition.inSeconds ?? 0)} / ${convertSeconds(snapshots.data?.duration.inSeconds ?? 0)}',
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 17),
-                        ),
-                      ],
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            assetsAudioPlayer.getCurrentAudioTitle == ''
+                                ? 'Please play your Songs'
+                                : assetsAudioPlayer.getCurrentAudioTitle,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30),
+                          ),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                onPressed: snapshots.data?.current?.index == 0
+                                    ? null
+                                    : () {
+                                        assetsAudioPlayer.previous();
+                                      },
+                                icon: const Icon(Icons.skip_previous),
+                              ),
+                              getBtnWidget,
+                              IconButton(
+                                onPressed: snapshots.data?.current?.index ==
+                                        (assetsAudioPlayer
+                                                    .playlist?.audios.length ??
+                                                0) -
+                                            1
+                                    ? null
+                                    : () {
+                                        assetsAudioPlayer.next();
+                                      },
+                                icon: const Icon(Icons.skip_next),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          Slider(
+                            value: snapshots.data?.currentPosition.inSeconds
+                                    .toDouble() ??
+                                0.0,
+                            onChanged: (value) {},
+                            min: 0,
+                            max:
+                                snapshots.data?.duration.inSeconds.toDouble() ??
+                                    0.0,
+                          ),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          Text(
+                            '${convertSeconds(snapshots.data?.currentPosition.inSeconds ?? 0)} / ${convertSeconds(snapshots.data?.duration.inSeconds ?? 0)}',
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 17),
+                          ),
+                        ],
+                      ),
                     );
                   }),
             ),
